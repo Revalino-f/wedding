@@ -580,9 +580,9 @@ function sleep(ms) {
 
                 jQuery(".elementor-element-183c1ca").children('.eae-section-bs').children('.eae-section-bs-inner').vegas({
                     slides: [{
-                        "src": "../assets/gambar/10.jpg"
+                        "src": "assets/gambar/10.jpg"
                     }, {
-                        "src": "../assets/gambar/2.jpg"
+                        "src": "assets/gambar/2.jpg"
                     }],
                     transition: 'fade2',
                     animation: '',
