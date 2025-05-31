@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Undangan Pernikahan Dodik & Ladynah</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        html, body {
+            height: 100%;
+            overflow: hidden;
+        }
+        
+        iframe {
+            width: 100%;
+            height: 100vh;
+            border: none;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <iframe id="undanganFrame"></iframe>
+
+    <script>
+        // Ambil parameter ?to= dari URL repal.com
+        function getUrlParameter(name) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(name);
+        }
+
+        // Ambil nama tamu dari parameter
+        const guestName = getUrlParameter('to');
+        const iframe = document.getElementById('undanganFrame');
+
+        // URL gasnikah.com
+        let gasnikahUrl = 'https://www.gasnikah.com/ladynah-dodik';
+
+        // Kalau ada parameter ?to=, tambahin ke URL gasnikah
+        if (guestName) {
+            gasnikahUrl += '?to=' + encodeURIComponent(guestName);
+            // Update title halaman
+            document.title = 'Undangan untuk ' + guestName;
+        }
+
+        // Set iframe ke gasnikah.com dengan parameter
+        iframe.src = gasnikahUrl;
+    </script>
+</body>
+</html>
