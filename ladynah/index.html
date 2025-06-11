@@ -3,7 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Undangan Pernikahan Dodik & Ladynah</title>
+    <title>The Wedding of Ladynah & Dodik</title>
+    
+    <!-- Open Graph Meta Tags untuk WhatsApp Preview -->
+    <meta property="og:title" content="The Wedding of Ladynah & Dodik" />
+    <meta property="og:description" content="Selasa, 17 Juni 2025 - Akad Nikah | Rabu, 18 Juni 2025 - Resepsi. Dengan penuh kebahagiaan, kami mengundang Anda untuk hadir dalam acara pernikahan kami." />
+    <meta property="og:image" content="https://www.gasnikah.com/wp-content/uploads/2025/05/ARRUM-2-768x1156.webp" />
+    <meta property="og:image:width" content="768" />
+    <meta property="og:image:height" content="1156" />
+    <meta property="og:url" content="" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="The Wedding of Ladynah & Dodik" />
+    
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="The Wedding of Ladynah & Dodik" />
+    <meta name="twitter:description" content="Selasa, 17 Juni 2025 - Akad Nikah | Rabu, 18 Juni 2025 - Resepsi. Dengan penuh kebahagiaan, kami mengundang Anda untuk hadir dalam acara pernikahan kami." />
+    <meta name="twitter:image" content="https://www.gasnikah.com/wp-content/uploads/2025/05/ARRUM-2-768x1156.webp" />
+    
+    <!-- WhatsApp specific meta tags -->
+    <meta property="whatsapp:title" content="The Wedding of Ladynah & Dodik" />
+    <meta property="whatsapp:image" content="https://www.gasnikah.com/wp-content/uploads/2025/05/ARRUM-2-768x1156.webp" />
+    
     <style>
         * {
             margin: 0;
@@ -25,31 +46,120 @@
     </style>
 </head>
 <body>
+    <!-- Main iframe -->
     <iframe id="undanganFrame"></iframe>
-
+    
     <script>
         // Ambil parameter ?to= dari URL repal.com
         function getUrlParameter(name) {
             const urlParams = new URLSearchParams(window.location.search);
             return urlParams.get(name);
         }
-
+        
+        // Update meta tags berdasarkan nama tamu
+        function updateMetaTags(guestName) {
+            if (guestName) {
+                // Update title
+                document.title = `The Wedding of Ladynah & Dodik - Undangan untuk ${guestName}`;
+                
+                // Update Open Graph title
+                const ogTitle = document.querySelector('meta[property="og:title"]');
+                if (ogTitle) {
+                    ogTitle.content = `The Wedding of Ladynah & Dodik - Undangan untuk ${guestName}`;
+                }
+                
+                // Update description dengan nama tamu dan detail acara
+                const ogDescription = document.querySelector('meta[property="og:description"]');
+                if (ogDescription) {
+                    ogDescription.content = `${guestName}, dengan penuh kebahagiaan kami mengundang Anda: Akad Nikah (Selasa, 17 Juni 2025) & Resepsi (Rabu, 18 Juni 2025) di Jl. Gatot Subroto No.32, Gedang - Porong`;
+                }
+                
+                // Update URL
+                const ogUrl = document.querySelector('meta[property="og:url"]');
+                if (ogUrl) {
+                    ogUrl.content = window.location.href;
+                }
+                
+                // Update Twitter meta
+                const twitterTitle = document.querySelector('meta[name="twitter:title"]');
+                if (twitterTitle) {
+                    twitterTitle.content = `The Wedding of Ladynah & Dodik - Undangan untuk ${guestName}`;
+                }
+                
+                const twitterDescription = document.querySelector('meta[name="twitter:description"]');
+                if (twitterDescription) {
+                    twitterDescription.content = `${guestName}, dengan penuh kebahagiaan kami mengundang Anda: Akad Nikah (Selasa, 17 Juni 2025) & Resepsi (Rabu, 18 Juni 2025) di Jl. Gatot Subroto No.32, Gedang - Porong`;
+                }
+                
+                // Update WhatsApp meta
+                const whatsappTitle = document.querySelector('meta[property="whatsapp:title"]');
+                if (whatsappTitle) {
+                    whatsappTitle.content = `The Wedding of Ladynah & Dodik - Undangan untuk ${guestName}`;
+                }
+            } else {
+                // Set URL untuk meta tags
+                const ogUrl = document.querySelector('meta[property="og:url"]');
+                if (ogUrl) {
+                    ogUrl.content = window.location.href;
+                }
+            }
+        }
+        
         // Ambil nama tamu dari parameter
         const guestName = getUrlParameter('to');
         const iframe = document.getElementById('undanganFrame');
-
+        
+        // Update meta tags
+        updateMetaTags(guestName);
+        
         // URL gasnikah.com
         let gasnikahUrl = 'https://www.gasnikah.com/ladynah-dodik';
-
+        
         // Kalau ada parameter ?to=, tambahin ke URL gasnikah
         if (guestName) {
             gasnikahUrl += '?to=' + encodeURIComponent(guestName);
-            // Update title halaman
-            document.title = 'Undangan untuk ' + guestName;
         }
-
+        
         // Set iframe ke gasnikah.com dengan parameter
         iframe.src = gasnikahUrl;
+        
+        // Fungsi untuk generate WhatsApp share link
+        function generateWhatsAppLink() {
+            const currentUrl = window.location.href;
+            const message = guestName 
+                ? `The Wedding of Ladynah & Dodik - Undangan untuk ${guestName}\n\nAkad Nikah: Selasa, 17 Juni 2025\nResepsi: Rabu, 18 Juni 2025\nLokasi: Jl. Gatot Subroto No.32, Gedang - Porong\n\n${currentUrl}`
+                : `The Wedding of Ladynah & Dodik\n\nAkad Nikah: Selasa, 17 Juni 2025\nResepsi: Rabu, 18 Juni 2025\nLokasi: Jl. Gatot Subroto No.32, Gedang - Porong\n\n${currentUrl}`;
+            
+            return `https://wa.me/?text=${encodeURIComponent(message)}`;
+        }
+        
+        // Event listener untuk keyboard shortcut share (Ctrl+S atau Cmd+S)
+        document.addEventListener('keydown', function(e) {
+            if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+                e.preventDefault();
+                window.open(generateWhatsAppLink(), '_blank');
+            }
+        });
+        
+        // Fungsi untuk copy link
+        function copyInvitationLink() {
+            navigator.clipboard.writeText(window.location.href).then(() => {
+                alert('Link undangan telah disalin!');
+            }).catch(() => {
+                // Fallback untuk browser lama
+                const textArea = document.createElement('textarea');
+                textArea.value = window.location.href;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                alert('Link undangan telah disalin!');
+            });
+        }
+        
+        // Expose functions ke global scope untuk debugging
+        window.shareToWhatsApp = generateWhatsAppLink;
+        window.copyLink = copyInvitationLink;
     </script>
 </body>
 </html>
