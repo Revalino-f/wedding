@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WhatsApp Invitation Sender</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #E8D5C4 0%, #D4B896 50%, #C8A882 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #FAF7F2;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            overflow: hidden;
+            border: 2px solid #D4B896;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #C8A882, #B8956F);
+            color: #FAF7F2;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 300;
+            color: #FAF7F2;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 1.1em;
+            color: #FAF7F2;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .form-section {
+            background: #F5F1E8;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 30px;
+            border-left: 4px solid #B8956F;
+            border: 1px solid #E8D5C4;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #5D4E37;
+            font-size: 1.1em;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #D4B896;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: #FAF7F2;
+            color: #5D4E37;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #B8956F;
+            box-shadow: 0 0 0 3px rgba(184, 149, 111, 0.1);
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #B8956F, #A08660);
+            color: #FAF7F2;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(184, 149, 111, 0.3);
+            background: linear-gradient(135deg, #A08660, #8F7551);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn-full {
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .sent-list {
+            background: #FAF7F2;
+            border-radius: 12px;
+            border: 2px solid #D4B896;
+        }
+
+        .sent-list-header {
+            background: #F5F1E8;
+            padding: 20px;
+            border-bottom: 1px solid #D4B896;
+            font-weight: 600;
+            color: #5D4E37;
+            font-size: 1.2em;
+        }
+
+        .sent-item {
+            padding: 15px 20px;
+            border-bottom: 1px solid #E8D5C4;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .sent-item:hover {
+            background: linear-gradient(135deg, #F5F1E8, #F0EBD8);
+            transform: translateX(5px);
+            border-left: 4px solid #B8956F;
+        }
+
+        .sent-item:last-child {
+            border-bottom: none;
+        }
+
+        .sent-name {
+            font-weight: 500;
+            color: #5D4E37;
+        }
+
+        .sent-time {
+            color: #8B7355;
+            font-size: 0.9em;
+        }
+
+        .resend-hint {
+            color: #B8956F;
+            font-size: 0.85em;
+            font-weight: 600;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .sent-item:hover .resend-hint {
+            opacity: 1;
+        }
+
+        .clear-btn {
+            background: #B8956F;
+            color: #FAF7F2;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 20px;
+            font-size: 14px;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .clear-btn:hover {
+            background: #A08660;
+            transform: translateY(-1px);
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #D4B896 0%, #C8A882 100%);
+            color: #FAF7F2;
+            padding: 25px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border: 1px solid #B8956F;
+        }
+
+        .stat-number {
+            font-size: 2.5em;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #FAF7F2;
+        }
+
+        .stat-label {
+            opacity: 0.9;
+            font-size: 1.1em;
+            color: #FAF7F2;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #8B7355;
+        }
+
+        .empty-state i {
+            font-size: 3em;
+            margin-bottom: 15px;
+            opacity: 0.3;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                border-radius: 10px;
+            }
+            
+            .header {
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+            
+            .stats {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .success-message {
+            background: #E8F5E8;
+            color: #2E7D32;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #4CAF50;
+            display: none;
+        }
+
+        .wa-icon {
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+
+        /* Elegant decorative elements */
+        .form-section h3 {
+            color: #5D4E37;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .form-section h3::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 2px;
+            background: linear-gradient(to right, #B8956F, #D4B896);
+        }
+
+        /* Subtle pattern overlay */
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: radial-gradient(circle at 2px 2px, rgba(184, 149, 111, 0.05) 1px, transparent 0);
+            background-size: 20px 20px;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1> WhatsApp Invitation Sender  Dodik</h1>
+            <p>Kirim undangan pernikahan dengan mudah melalui WhatsApp</p>
+            <div style="font-size: 0.9em; opacity: 0.8; margin-top: 10px;">
+                💡 Aplikasi akan membuka WhatsApp untuk memilih kontak
+            </div>
+        </div>
+
+        <div class="content">
+            <div class="stats">
+                <div class="stat-card">
+                    <div class="stat-number" id="totalSent">0</div>
+                    <div class="stat-label">Total Terkirim</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="todaySent">0</div>
+                    <div class="stat-label">Hari Ini</div>
+                </div>
+            </div>
+
+            <div class="success-message" id="successMessage">
+                ✅ Pesan berhasil dikirim!
+            </div>
+
+            <div class="form-section">
+                <h3 style="margin-bottom: 20px;">📝 Kirim Undangan</h3>
+                <div class="form-group">
+                    <label for="recipientName">Nama Penerima:</label>
+                    <input type="text" id="recipientName" placeholder="Masukkan nama penerima undangan">
+                </div>
+                <button class="btn btn-full" onclick="sendInvitation()">
+                    <svg class="wa-icon" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.885 3.488"/>
+                    </svg>
+                    Buka WhatsApp & Pilih Kontak
+                </button>
+            </div>
+
+            <div class="sent-list">
+                <div class="sent-list-header">
+                    📋 Daftar Undangan Terkirim
+                    <div style="font-size: 0.9em; opacity: 0.8; margin-top: 5px;">💡 Klik nama untuk kirim ulang</div>
+                    <button class="clear-btn" onclick="clearAllData()">Hapus Semua</button>
+                </div>
+                <div id="sentList">
+                    <div class="empty-state">
+                        <div style="font-size: 3em; margin-bottom: 15px; opacity: 0.3;">📭</div>
+                        <p>Belum ada undangan yang dikirim</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Key untuk localStorage
+        const STORAGE_KEY = 'whatsapp_sent_invitations';
+
+        // Template pesan undangan
+        function createInvitationMessage(name) {
+            const encodedName = encodeURIComponent(name);
+            return `*Assalamualaikum Warahmatullahi Wabarakatuh*
+
+Tanpa mengurangi rasa hormat, perkenankan kami mengundang Bapak/Ibu/Saudara/i *${name}* untuk menghadiri acara kami.
+
+*Berikut link undangan kami,* untuk info lengkap dari acara bisa kunjungi :
+https://ladynahdodik.my.id/dodik/?to=${encodedName}
+
+Merupakan suatu kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan untuk hadir dan memberikan doa restu.
+
+*Mohon maaf perihal undangan hanya di bagikan melalui pesan ini.*
+
+*Dan agar selalu menjaga kesehatan bersama serta datang pada waktu yang telah ditentukan.*
+
+Terima kasih banyak atas perhatiannya.
+
+*Wassalamualaikum Warahmatullahi Wabarakatuh*`;
+        }
+
+        // Fungsi untuk menyimpan data ke localStorage
+        function saveSentInvitation(name) {
+            const sentData = getSentInvitations();
+            const newEntry = {
+                name: name,
+                timestamp: new Date().toISOString(),
+                date: new Date().toLocaleDateString('id-ID'),
+                time: new Date().toLocaleTimeString('id-ID')
+            };
+            
+            sentData.push(newEntry);
+            // Store in memory instead of localStorage for Claude.ai compatibility
+            window.sentInvitations = sentData;
+        }
+
+        // Fungsi untuk mengambil data dari localStorage
+        function getSentInvitations() {
+            // Use in-memory storage for Claude.ai compatibility
+            return window.sentInvitations || [];
+        }
+
+        // Fungsi untuk mengirim undangan
+        function sendInvitation() {
+            const nameInput = document.getElementById('recipientName');
+            const name = nameInput.value.trim();
+
+            if (!name) {
+                alert('⚠️ Silakan masukkan nama penerima terlebih dahulu!');
+                nameInput.focus();
+                return;
+            }
+
+            // Cek apakah nama sudah pernah dikirim
+            const sentData = getSentInvitations();
+            const alreadySent = sentData.find(item => 
+                item.name.toLowerCase() === name.toLowerCase()
+            );
+
+            if (alreadySent) {
+                const confirmSend = confirm(
+                    `⚠️ Undangan untuk "${name}" sudah pernah dikirim pada ${alreadySent.date} pukul ${alreadySent.time}.\n\nApakah Anda ingin mengirim ulang?\n\n💡 Tips: Anda juga bisa klik nama di tabel untuk kirim ulang tanpa konfirmasi.`
+                );
+                
+                if (!confirmSend) {
+                    return;
+                }
+            }
+
+            // Buat pesan undangan
+            const message = createInvitationMessage(name);
+            const encodedMessage = encodeURIComponent(message);
+
+            // Deteksi perangkat mobile atau desktop
+            const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+            
+            let whatsappUrl;
+            if (isMobile) {
+                // Untuk mobile: buka aplikasi WhatsApp langsung
+                whatsappUrl = `whatsapp://send?text=${encodedMessage}`;
+            } else {
+                // Untuk desktop: buka WhatsApp Web
+                whatsappUrl = `https://web.whatsapp.com/send?text=${encodedMessage}`;
+            }
+            
+            // Simpan data bahwa undangan sudah dikirim
+            saveSentInvitation(name);
+            
+            // Bersihkan input
+            nameInput.value = '';
+            
+            // Tampilkan pesan sukses
+            showSuccessMessage();
+            
+            // Update tampilan
+            updateDisplay();
+            
+            // Buka WhatsApp
+            if (isMobile) {
+                // Untuk mobile, coba buka aplikasi dulu, jika gagal buka web
+                window.location.href = whatsappUrl;
+                
+                // Fallback ke WhatsApp Web jika aplikasi tidak terbuka dalam 2 detik
+                setTimeout(() => {
+                    window.open(`https://web.whatsapp.com/send?text=${encodedMessage}`, '_blank');
+                }, 2000);
+            } else {
+                window.open(whatsappUrl, '_blank');
+            }
+        }
+
+        // Fungsi untuk mengirim ulang undangan dari tabel
+        function resendInvitation(name) {
+            // Buat pesan undangan
+            const message = createInvitationMessage(name);
+            const encodedMessage = encodeURIComponent(message);
+
+            // Deteksi perangkat mobile atau desktop
+            const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+            
+            let whatsappUrl;
+            if (isMobile) {
+                // Untuk mobile: buka aplikasi WhatsApp langsung
+                whatsappUrl = `whatsapp://send?text=${encodedMessage}`;
+            } else {
+                // Untuk desktop: buka WhatsApp Web
+                whatsappUrl = `https://web.whatsapp.com/send?text=${encodedMessage}`;
+            }
+            
+            // Simpan data bahwa undangan sudah dikirim ulang
+            saveSentInvitation(name);
+            
+            // Tampilkan pesan sukses
+            showSuccessMessage(`Mengirim ulang undangan untuk ${name}...`);
+            
+            // Update tampilan
+            updateDisplay();
+            
+            // Buka WhatsApp
+            if (isMobile) {
+                // Untuk mobile, coba buka aplikasi dulu, jika gagal buka web
+                window.location.href = whatsappUrl;
+                
+                // Fallback ke WhatsApp Web jika aplikasi tidak terbuka dalam 2 detik
+                setTimeout(() => {
+                    window.open(`https://web.whatsapp.com/send?text=${encodedMessage}`, '_blank');
+                }, 2000);
+            } else {
+                window.open(whatsappUrl, '_blank');
+            }
+        }
+
+        // Fungsi untuk menampilkan pesan sukses
+        function showSuccessMessage(customMessage = null) {
+            const successMsg = document.getElementById('successMessage');
+            if (customMessage) {
+                successMsg.innerHTML = `✅ ${customMessage}`;
+            } else {
+                successMsg.innerHTML = '✅ Pesan berhasil dikirim!';
+            }
+            successMsg.style.display = 'block';
+            
+            setTimeout(() => {
+                successMsg.style.display = 'none';
+            }, 3000);
+        }
+
+        // Fungsi untuk mengupdate tampilan daftar
+        function updateDisplay() {
+            const sentData = getSentInvitations();
+            const sentListContainer = document.getElementById('sentList');
+            
+            if (sentData.length === 0) {
+                sentListContainer.innerHTML = `
+                    <div class="empty-state">
+                        <div style="font-size: 3em; margin-bottom: 15px; opacity: 0.3;">📭</div>
+                        <p>Belum ada undangan yang dikirim</p>
+                    </div>
+                `;
+            } else {
+                // Urutkan berdasarkan waktu terbaru
+                sentData.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+                
+                const listHTML = sentData.map(item => `
+                    <div class="sent-item" onclick="resendInvitation('${item.name}')" style="cursor: pointer;" title="Klik untuk kirim ulang ke ${item.name}">
+                        <span class="sent-name">👤 ${item.name}</span>
+                        <span class="sent-time">${item.date} • ${item.time}</span>
+                        <span class="resend-hint">↻ Kirim Ulang</span>
+                    </div>
+                `).join('');
+                
+                sentListContainer.innerHTML = listHTML;
+            }
+
+            // Update statistik
+            updateStats();
+        }
+
+        // Fungsi untuk mengupdate statistik
+        function updateStats() {
+            const sentData = getSentInvitations();
+            const today = new Date().toLocaleDateString('id-ID');
+            
+            const totalSent = sentData.length;
+            const todaySent = sentData.filter(item => item.date === today).length;
+            
+            document.getElementById('totalSent').textContent = totalSent;
+            document.getElementById('todaySent').textContent = todaySent;
+        }
+
+        // Fungsi untuk menghapus semua data
+        function clearAllData() {
+            const confirmClear = confirm('⚠️ Apakah Anda yakin ingin menghapus semua data undangan yang terkirim?\n\nTindakan ini tidak dapat dibatalkan.');
+            
+            if (confirmClear) {
+                window.sentInvitations = [];
+                updateDisplay();
+                alert('✅ Semua data berhasil dihapus!');
+            }
+        }
+
+        // Event listener untuk Enter key
+        document.getElementById('recipientName').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendInvitation();
+            }
+        });
+
+        // Inisialisasi tampilan saat halaman dimuat
+        document.addEventListener('DOMContentLoaded', function() {
+            window.sentInvitations = [];
+            updateDisplay();
+            document.getElementById('recipientName').focus();
+        });
+    </script>
+</body>
+</html>
