@@ -139,8 +139,8 @@
         function generateWhatsAppLink() {
             const currentUrl = window.location.href;
             const message = guestName 
-                ? `The Wedding of Ladynah & Dodik - Undangan untuk ${guestName}\n\nAkad Nikah: Selasa, 17 Juni 2025\nResepsi: Kamis, 19 Juni 2025\n\n${currentUrl}`
-                : `The Wedding of Ladynah & Dodik\n\nAkad Nikah: Selasa, 17 Juni 2025\nResepsi: kamis, 19 Juni 2025\n\n${currentUrl}`;
+                ? `The Wedding of Ladynah & Dodik - Undangan untuk ${guestName}\n\nAkad Nikah: Selasa, 17 Juni 2025\n$\nResepsi: Kamis, 19 Juni 2025\n\n${currentUrl}`
+                : `The Wedding of Ladynah & Dodik\n\nAkad Nikah: Selasa, 17 Juni 2025\n$\nResepsi: kamis, 19 Juni 2025\n\n${currentUrl}`;
             
             return `https://wa.me/?text=${encodeURIComponent(message)}`;
         }
