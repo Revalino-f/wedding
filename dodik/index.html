@@ -38,18 +38,17 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <script>
-  function shouldBlockAccess() {
-    const isMobileUA = /Android|iPhone|iPad|iPod|webOS|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-    const screenWidth = window.innerWidth;
+function shouldBlockAccess() {
+  const ua = navigator.userAgent;
+  const isMobileUA = /Android|iPhone|iPad|iPod|webOS|BlackBerry|IEMobile|Opera Mini/i.test(ua);
+  const isBot = /WhatsApp|facebookexternalhit|Twitterbot|Slackbot|Googlebot|bingbot/i.test(ua);
+  const screenWidth = window.innerWidth;
 
-    // Jika bukan mobile user-agent ATAU mobile tapi ukuran layar terlalu besar (mode desktop)
-    if (!isMobileUA || (isMobileUA && screenWidth > 768)) {
-      window.location.href = 'assets/mode-blokir.html';
-    }
+  if (!isMobileUA && !isBot || (isMobileUA && screenWidth > 768 && !isBot)) {
+    window.location.href = 'assets/mode-blokir.html';
   }
+}
 
-  window.addEventListener('load', shouldBlockAccess);
-  window.addEventListener('resize', shouldBlockAccess);
 </script>
 
 
