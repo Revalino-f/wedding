@@ -31,7 +31,21 @@
 <meta name="image" content="https://ladynahdodik.my.id/dodik/assets/gambar/fav.jpg" />
 <link rel="image_src" href="https://ladynahdodik.my.id/dodik/assets/gambar/fav.jpg" />
 
-  
+  <script>
+  function shouldBlockAccess() {
+    const isMobileUA = /Android|iPhone|iPad|iPod|webOS|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    const screenWidth = window.innerWidth;
+
+    // Jika bukan mobile user-agent ATAU mobile tapi ukuran layar terlalu besar (mode desktop)
+    if (!isMobileUA || (isMobileUA && screenWidth > 768)) {
+      window.location.href = 'assets/mode-blokir.html';
+    }
+  }
+
+  window.addEventListener('load', shouldBlockAccess);
+  window.addEventListener('resize', shouldBlockAccess);
+</script>
+
 <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
         <!-- / Yoast SEO Premium plugin. -->
         <link rel='stylesheet' id='bdt-uikit-css' href='https://www.gasnikah.com/wp-content/plugins/weddingpress/assets/css/modules/bdt-uikit.css?ver=3.15.1' type='text/css' media='all'/>
