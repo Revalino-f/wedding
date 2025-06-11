@@ -172,6 +172,21 @@
         // Expose functions ke global scope untuk debugging
         window.shareToWhatsApp = generateWhatsAppLink;
         window.copyLink = copyInvitationLink;
+        document.addEventListener('visibilitychange', () => {
+    const iframe = document.getElementById('undanganFrame');
+    if (document.hidden && iframe) {
+        iframe.remove(); // hapus saat keluar
+    } else if (!document.hidden && !document.getElementById('undanganFrame')) {
+        // buat iframe ulang
+        const newIframe = document.createElement('iframe');
+        newIframe.id = 'undanganFrame';
+        newIframe.src = gasnikahUrl;
+        newIframe.style = 'width: 100%; height: 100vh; border: none; display: block;';
+        document.body.appendChild(newIframe);
+    }
+});
+
     </script>
+    
 </body>
 </html>
