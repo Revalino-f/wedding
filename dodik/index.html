@@ -59,7 +59,7 @@
 </head>
 <body>
     <!-- Main iframe -->
-    <iframe id="undanganFrame"></iframe>
+    <iframe id="undanganFrame" sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox"></iframe>
     
     <script>
         // Ambil parameter ?to= dari URL repal.com
@@ -117,6 +117,86 @@
             }
         }
         
+        // Function untuk mengecek apakah URL adalah external link
+        function isExternalLink(url) {
+            try {
+                const urlObj = new URL(url);
+                const currentDomain = window.location.hostname;
+                const linkDomain = urlObj.hostname;
+                
+                // Daftar domain yang dianggap external dan harus dibuka di tab baru
+                const externalDomains = [
+                    'maps.google.com',
+                    'www.google.com',
+                    'goo.gl',
+                    'maps.app.goo.gl',
+                    'wa.me',
+                    'api.whatsapp.com',
+                    'instagram.com',
+                    'www.instagram.com',
+                    'facebook.com',
+                    'www.facebook.com',
+                    'twitter.com',
+                    'www.twitter.com',
+                    'x.com',
+                    'www.x.com',
+                    'youtube.com',
+                    'www.youtube.com',
+                    'youtu.be',
+                    'tiktok.com',
+                    'www.tiktok.com'
+                ];
+                
+                // Cek jika domain berbeda dari domain saat ini atau ada dalam daftar external
+                return linkDomain !== currentDomain || externalDomains.includes(linkDomain);
+            } catch (e) {
+                return false;
+            }
+        }
+        
+        // Handler untuk menangkap klik pada iframe
+        function handleIframeClick(event) {
+            const iframe = document.getElementById('undanganFrame');
+            
+            try {
+                // Coba akses iframe content
+                const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+                
+                // Event listener untuk semua link dalam iframe
+                const links = iframeDoc.querySelectorAll('a[href]');
+                
+                links.forEach(link => {
+                    link.addEventListener('click', function(e) {
+                        const href = this.getAttribute('href');
+                        
+                        if (href && isExternalLink(href)) {
+                            e.preventDefault();
+                            window.open(href, '_blank');
+                        }
+                    });
+                });
+                
+            } catch (error) {
+                console.log('Cannot access iframe content due to CORS policy');
+                // Jika tidak bisa akses iframe karena CORS, gunakan message listener
+            }
+        }
+        
+        // Message listener untuk komunikasi dengan iframe
+        window.addEventListener('message', function(event) {
+            // Verifikasi origin untuk keamanan
+            if (event.origin !== 'https://ladynahdodik.my.id') {
+                return;
+            }
+            
+            if (event.data && event.data.type === 'external_link') {
+                const url = event.data.url;
+                if (url && isExternalLink(url)) {
+                    window.open(url, '_blank');
+                }
+            }
+        });
+        
         // Ambil nama tamu dari parameter
         const guestName = getUrlParameter('to');
         const iframe = document.getElementById('undanganFrame');
@@ -134,6 +214,49 @@
         
         // Set iframe ke gasnikah.com dengan parameter
         iframe.src = gasnikahUrl;
+        
+        // Event listener ketika iframe selesai load
+        iframe.addEventListener('load', function() {
+            handleIframeClick();
+            
+            // Inject script ke iframe untuk handle external links (jika memungkinkan)
+            try {
+                const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+                const script = iframeDoc.createElement('script');
+                script.textContent = `
+                    // Override untuk semua link external
+                    document.addEventListener('click', function(e) {
+                        const link = e.target.closest('a[href]');
+                        if (link) {
+                            const href = link.getAttribute('href');
+                            if (href && (
+                                href.includes('maps.google.com') ||
+                                href.includes('goo.gl') ||
+                                href.includes('wa.me') ||
+                                href.includes('instagram.com') ||
+                                href.includes('facebook.com') ||
+                                href.includes('twitter.com') ||
+                                href.includes('x.com') ||
+                                href.includes('youtube.com') ||
+                                href.includes('youtu.be') ||
+                                href.includes('tiktok.com') ||
+                                href.startsWith('http') && !href.includes(window.location.hostname)
+                            )) {
+                                e.preventDefault();
+                                // Kirim pesan ke parent window
+                                window.parent.postMessage({
+                                    type: 'external_link',
+                                    url: href
+                                }, '*');
+                            }
+                        }
+                    });
+                `;
+                iframeDoc.head.appendChild(script);
+            } catch (error) {
+                console.log('Cannot inject script to iframe due to CORS policy');
+            }
+        });
         
         // Fungsi untuk generate WhatsApp share link
         function generateWhatsAppLink() {
