@@ -713,6 +713,40 @@ class="has_eae_slider elementor-column elementor-col-100 elementor-inner-column 
                                                                 </div>
                                                             </div>
                                                         </section>
+                                                     <script>
+document.addEventListener('click', function(e) {
+    const link = e.target.closest('a[href]');
+    if (link) {
+        const href = link.getAttribute('href');
+        const externalDomains = [
+            'maps.google.com', 'goo.gl', 'wa.me', 'api.whatsapp.com',
+            'instagram.com', 'facebook.com', 'twitter.com', 'x.com',
+            'youtube.com', 'youtu.be', 'tiktok.com'
+        ];
+
+        try {
+            const linkUrl = new URL(href, window.location.href);
+            const domain = linkUrl.hostname;
+
+            const isExternal = externalDomains.some(ext => domain.includes(ext)) ||
+                               linkUrl.hostname !== window.location.hostname;
+
+            if (isExternal) {
+                e.preventDefault();
+
+                // Kirim pesan ke parent window
+                window.parent.postMessage({
+                    type: 'external_link',
+                    url: linkUrl.href
+                }, '*');
+            }
+        } catch (err) {
+            console.warn('Invalid URL clicked:', href);
+        }
+    }
+});
+</script>
+
                                                         <section class="has_eae_slider elementor-section elementor-inner-section elementor-element elementor-element-8399619 elementor-section-height-min-height elementor-section-boxed elementor-section-height-default" data-id="8399619" data-element_type="section" data-settings="{&quot;background_background&quot;:&quot;classic&quot;}">
                                                             <div class="elementor-container elementor-column-gap-default">
                                                                 <div class="has_eae_slider elementor-column elementor-col-100 elementor-inner-column elementor-element elementor-element-cf27789" data-id="cf27789" data-element_type="column" data-settings="{&quot;background_background&quot;:&quot;classic&quot;}">
@@ -1897,34 +1931,7 @@ class="has_eae_slider elementor-column elementor-col-100 elementor-inner-column 
               elemenTamu.textContent = decodeURIComponent(namaTamu);
             }
           </script>
-          <script>
-document.addEventListener('click', function (e) {
-    const link = e.target.closest('a[href]');
-    if (link) {
-        const href = link.getAttribute('href');
-
-        if (href && (
-            href.includes('maps.google.com') ||
-            href.includes('maps.app.goo.gl') ||
-            href.includes('goo.gl') ||
-            href.includes('wa.me') ||
-            href.includes('api.whatsapp.com') ||
-            href.includes('instagram.com') ||
-            href.includes('facebook.com') ||
-            href.includes('x.com') ||
-            href.includes('youtube.com') ||
-            href.includes('tiktok.com') ||
-            href.startsWith('http') && !href.includes(window.location.hostname)
-        )) {
-            e.preventDefault();
-            window.parent.postMessage({
-                type: 'external_link',
-                url: href
-            }, '*');
-        }
-    }
-});
-</script>
+  
 
         
     </body>
