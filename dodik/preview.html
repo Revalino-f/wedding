@@ -1897,7 +1897,35 @@ class="has_eae_slider elementor-column elementor-col-100 elementor-inner-column 
               elemenTamu.textContent = decodeURIComponent(namaTamu);
             }
           </script>
-          
+          <script>
+document.addEventListener('click', function (e) {
+    const link = e.target.closest('a[href]');
+    if (link) {
+        const href = link.getAttribute('href');
+
+        if (href && (
+            href.includes('maps.google.com') ||
+            href.includes('maps.app.goo.gl') ||
+            href.includes('goo.gl') ||
+            href.includes('wa.me') ||
+            href.includes('api.whatsapp.com') ||
+            href.includes('instagram.com') ||
+            href.includes('facebook.com') ||
+            href.includes('x.com') ||
+            href.includes('youtube.com') ||
+            href.includes('tiktok.com') ||
+            href.startsWith('http') && !href.includes(window.location.hostname)
+        )) {
+            e.preventDefault();
+            window.parent.postMessage({
+                type: 'external_link',
+                url: href
+            }, '*');
+        }
+    }
+});
+</script>
+
         
     </body>
 </html>
